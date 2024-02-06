@@ -6,12 +6,23 @@ jobs:
   basic:
     strategy:
       matrix:
-        os:
-        - ubuntu-latest
-        - windows-latest
-        - macos-latest
+        include:
+        - os: ubuntu-latest
+          command: nproc
+        - os: windows-latest
+          command: nproc
+        - os: macos-latest
+          command: sysctl -n hw.physicalcpu
     runs-on: ${{ matrix.os }}
     steps:
-    - name: nproc
+    - name: ${{ matrix.command }}
+      env:
+        os: ${{ matrix.os }}
+        command: ${{ matrix.command }}
       shell: bash
-      run: nproc
+      run: |
+        (
+          echo "# $os"
+          echo "## $command"
+          $command
+        ) | tee -a "$GITHUB_STEP_SUMMARY"
