@@ -1,0 +1,17 @@
+name: nproc
+
+on: push
+
+jobs:
+  basic:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        - windows-latest
+        - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: nproc
+      shell: bash
+      run: nproc
